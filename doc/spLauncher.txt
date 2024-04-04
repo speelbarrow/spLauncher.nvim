@@ -1,0 +1,216 @@
+*spLauncher.txt*                   A Neovim plugin for launching tasks, I guess.
+==============================================================================
+spLauncher User Manual                                            *spLauncher*
+
+The philosophy behind |spLauncher| is that there are truly only a handful of
+actions we may want quick access to when programming. The easiest example of
+this is a `run` action. In most cases, when programming, it is imperative that
+you have a way to run the program. Unfortunately, the process to run a program
+differs depending on the language. |spLauncher| provides a mechanism for
+grouping all of these commands under one "action", allowing quick and easy
+program execution (in this example) without having to remember an unweildy
+amount of information.
+
+==============================================================================
+Table of Contents                                             *spLauncher-toc*
+
+1. The Action Map     |spLauncher-actions|
+2. Handlers           |spLauncher-handlers|
+3. Configuration      |spLauncher-config|
+4. spLaunching        |spLauncher-spLaunch|
+
+==============================================================================
+1. The Action Map                                         *spLauncher-actions*
+
+The action map is used by |spLauncher| to determine what command to actually
+execute when the |:SpLaunch| command is invoked. For example, if you execute
+`:SpLaunch run`, |spLauncher| will check the action map for what handler
+(|spLauncher-handlers|) corresponds to the `run` action.
+
+You MUST set up the action map for any buffer you want this plugin to work
+with. It is recommended to use the |ftplugin| mechanism to do so (with
+filetype-specific action-map settings).
+
+This is a buffer-local property, and is accessed either by
+`b:spLauncherActionMap` (VimScript) or `vim.b.spLauncherActionMap` (Lua). See
+`types.lua` for more information about the expected shape of the data. While
+this value can be configured individually for each buffer, it is recommended
+to utilize |autocommand|s or the |ftplugin| system to automate configuration
+based on properties of a buffer.
+
+NOTE: Any alphanumeric string (always converted to lowercase internally) can
+be used as an action name, except for `"base"` (see
+|spLauncher-handlers-string|).
+
+==============================================================================
+2. Handlers                                              *spLauncher-handlers*
+
+The term "handler" is used to describe any behaviour that corresponds to a
+certain action in the action map (|spLauncher-actions|). There are a few
+different datatypes that will be accepted as handlers, with different
+behaviours:
+
+- String Handlers                                 *spLauncher-handlers-string*
+
+  String handlers refer to any handlers that result in a string being taken by
+  spLauncher and executed in a Neovim |terminal|. The handler could be any of
+  the following:
+  - An actual string
+  - `true` (will be replaced with the action name)
+  - A function that returns a string (will be re-invoked every time the action
+    is executed)
+  
+  If `spLauncherActionMap.base` is a non-empty string value, it will be prepended
+  with a space to any string handler and then use the result as the command to
+  run in the |terminal|. This also comes with the caveat that `"base"` is not
+  a valid action name.
+
+  String handlers may be directly provided as the handler value, like so:
+>lua
+  --Lua
+  vim.b.spLauncherActionMap = {
+    action1 = "action1",
+    action2 = true, -- Equivalent to "action2"
+    action3 = function() return "action3" end, -- Equivalent to "action3"
+  }
+<>vim
+  " VimScript
+  let b:spLauncherActionMap = { "action1": "action1" }
+  let b:spLauncherActionMap.action2 = v:true " Equivalent to "action2"
+  
+  function s:action3()
+    return "action3"
+  end
+  " Equivalent to "action3"
+  let b:spLauncherActionMap.action3 = funcref("s:action3") 
+<
+- Function Handlers                             *spLauncher-handlers-function*
+
+  If a function is provided as a handler and the function does NOT return a
+  string value, |spLauncher| assumes that the function itself was the intended
+  handler. Utility functions are provided to allow for executing commands in
+  the |terminal| from Lua while still using |spLauncher-config| configuration
+  options (see |spLauncher-spLaunch|).
+
+- Configured Handlers                             *spLauncher-handlers-config*
+
+  Instead of providing the handler alone, you can instead provide a
+  dictionary (VimScript)/table (Lua) with a handler alongside configuration
+  values. When the action is invoked, these configuration values will be used
+  instead of the global configuration.
+>lua
+  -- Lua
+  vim.b.spLauncherActionMap = {
+    action = {
+      handler = -- ... handler ...
+      config = {
+        -- ... config ...
+      }
+    }
+  }
+<>vim
+  " VimScript
+  b:spLauncherActionMap.action = {}
+  b:spLauncherActionMap.action.handler = " ... handler ...
+  b:spLauncherActionMap.action.config = " ... config ...
+<
+==============================================================================
+3. Configuration                                           *spLauncher-config*
+
+Configuration options may be:
+- passed in a table as an argument to the `setup` function
+- edited directly in the `vim.g.spLauncherConfig` table (Lua) / 
+  `g:spLauncherConfig` dictionary (VimScript) after `setup` has been called
+- Overriden for specific actions in the action map (see
+  |spLauncher-handlers-config|)
+
+Configuration options are as follows (the hierarchy here represents a Lua
+table/VimScript dictionary):
+- `debug` (default: `false`)
+  When `true`, outputs the actual string that is executed by |spLauncher|
+  before doing so. Uses |vim.notify| to display the string.
+
+- `window`                                          *spLauncher-config-window*
+
+  - `persist` (default: `true`)
+    spLauncher uses the Neovim |terminal| to execute command-line actions. By 
+    default, the window will stay open after the program has exited until
+    input is attempted. To override this (i.e. close the window immediately
+    after the program exits), set `persist` to `false`.
+
+  - `position` (default: `"below"`)
+    Defines which area of the screen should hold the new
+    window when |spLauncher| opens a |terminal|. `"above"` and `"below"` will
+    result in horizontal splits, and `"left"` and `"right"` result in vertical
+    splits. See |nvim_open_win| for more information.
+
+- `keymap`                                          *spLauncher-config-keymap*
+
+  - `merge` (default: `true`)
+    Whether or not to merge any provided keymaps with the defaults. When
+    false, the default keymaps are discarded entirely in favor of the provided
+    configuration.
+
+  - actions (default:
+
+>lua
+      {
+        run = "<M-s>r",
+        debug = "<M-s>d",
+        test = "<M-s>t",
+        build = "<M-s>b",
+        clean = "<M-s>c"
+      }
+<
+    )
+    A table of action names and their corresponding keys.
+    NOTE: This has no effect when set as configuration for a specific handler
+    (|spLauncher-handlers-config|).
+
+  - `sigint` (default: `"<C-c>"` [Control+C])
+    Key(s) to send `SIGINT` to the program running in a |terminal|
+    window opened by |spLauncher|. If the program has already exited, this
+    will close the |terminal| window (even in |Normal-mode|).
+
+  - `close` (default: `{ "<Esc>", "q" }`)
+    Key(s) to close the |terminal| window opened by |spLauncher| (if the
+    program is still running, this does nothing).
+
+  - `force_close` (default: `"<C-q>"` [Control+Q])
+    Key(s) to close the |terminal| window, killing the process if it is still
+    running.
+
+==============================================================================
+4. spLaunching                                           *spLauncher-spLaunch*
+                                                                    *spLaunch*
+                                                                    *SpLaunch*
+                                                                   *:SpLaunch*
+                                                                 *spLaunching*
+|spLauncher| can run commands in three ways:
+- The `:SpLaunch` command on the Vim command line, which takes as arguments:
+  - (optional) a buffer number
+  - One or more action names
+
+>vim
+  :SpLaunch run
+  :SpLaunch 0 run
+  :SpLaunch run test debug
+<
+- The `spLaunch` function exported by the module, that takes as arguments:
+  - The action name(s) as a string or string array
+  - (optional) The buffer number (default: |nvim_get_current_buf|)
+  - (optional) Configuration overrides (see |spLauncher-config|)
+
+>lua
+  require "spLauncher".spLaunch("run", 0, ...)
+<
+- The `direct_spLaunch` function exported by the module, that takes as
+  arguments:
+  - The command string to run
+  - (optional) The buffer number (default: |nvim_get_current_buf|)
+  - (optional) Configuration overrides (see |spLauncher-config|)
+
+>lua
+  require "spLauncher".direct_spLaunch(--[[ command ]], 0, ...)
+<
+vim:tw=78:ft=help:norl:et:ts=2:sw=2:fen:fdl=0:
