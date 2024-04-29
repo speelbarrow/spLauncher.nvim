@@ -129,9 +129,14 @@ Configuration options may be:
 
 Configuration options are as follows (the hierarchy here represents a Lua
 table/VimScript dictionary):
-- `debug` (default: `false`)
+- `notify` (default: `false`)
   When `true`, outputs the actual string that is executed by |spLauncher|
-  before doing so. Uses |vim.notify| to display the string.
+  before doing so. Uses |vim.notify| to display the string. Not affected by
+  `config.silent`.
+
+- `silent` (default: `false`)
+  When `true`, executes commands in the background without displaying a 
+  |terminal| window. Does not affect `config.notify`.
 
 - `expand` (default: `true`)
   When `true`, processes string commands through the |expand| function. More
@@ -159,9 +164,7 @@ table/VimScript dictionary):
     false, the default keymaps are discarded entirely in favor of the provided
     configuration.
 
-  - actions (default:
-
->lua
+  - actions (default: >lua
       {
         run = "<M-s>r",
         debug = "<M-s>d",
@@ -169,8 +172,7 @@ table/VimScript dictionary):
         build = "<M-s>b",
         clean = "<M-s>c"
       }
-<
-    )
+<    )
     A table of action names and their corresponding keys.
     NOTE: This has no effect when set as configuration for a specific handler
     (|spLauncher-handlers-config|).
@@ -190,10 +192,10 @@ table/VimScript dictionary):
 
 ==============================================================================
 4. spLaunching                                           *spLauncher-spLaunch*
+                                                      *spLauncher-spLaunching*
                                                                     *spLaunch*
                                                                     *SpLaunch*
                                                                    *:SpLaunch*
-                                                                 *spLaunching*
 |spLauncher| can run commands in three ways:
 - The `:SpLaunch` command on the Vim command line, which takes as arguments:
   - (optional) a buffer number

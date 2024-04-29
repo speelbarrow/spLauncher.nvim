@@ -20,9 +20,11 @@
 ---@alias spLauncher.Handler.Function fun(): nil # See `:help spLauncher-handlers-function`
 
 ---@class spLauncher.Config See `:help spLauncher-config`
----@field debug? boolean Default: `false`
+---@field notify? boolean Default: `false`
 --- When `true`, outputs the actual string that is executed by spLauncher before doing so. Uses `vim.notify` to display
 --- the string.
+---@field silent? boolean Default: `false`
+--- When `true`, executes commands in the background without displaying a terminal window.
 ---@field expand? boolean Default: `true`
 --- When `true`, processes string commands through the |expand| function. More specifically, will match any `'%'`
 --- character and all non-whitespace characters immediately after it, and will run those through |expand|.

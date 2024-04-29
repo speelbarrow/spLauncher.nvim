@@ -24,7 +24,8 @@ function M.setup(config)
                                    end, { nargs = "+" })
 
   vim.g.spLauncherConfig = vim.tbl_deep_extend("force", {
-                                                 debug = false,
+                                                 notify = false,
+                                                 silent = false,
                                                  expand = true,
                                                  window = {
                                                    persist = true,
@@ -90,7 +91,8 @@ function M.spLaunch(action, bufnr, config)
     command = action
   end
   if type(command) == "string" then
-    M.direct_spLaunch(command, config)
+    M.direct_spLaunch(
+      (vim.b[bufnr].spLauncherActionMap.base and (vim.b[bufnr].spLauncherActionMap.base .. " ") or "") .. command, config)
   end
 end
 
@@ -100,16 +102,35 @@ function M.direct_spLaunch(command, config)
   -- Resolve variables
   config = vim.tbl_deep_extend("keep", config or {}, vim.g.spLauncherConfig)
   if config.expand then
-    ---@param match string
     command = command:gsub("%%%S*", vim.fn.expand)
   end
 
-  -- Run command in terminal
-  local term_buf = vim.api.nvim_create_buf(false, true)
+  -- Output command if `notify` is true
+  if config.notify then
+    vim.notify("spLauncher: spLaunching '" .. command .. "'", vim.log.levels.INFO)
+  end
+
+  -- Run command in terminal, when `silent` is true the window is not opened and the buffer is listed instead
+  local term_buf = vim.api.nvim_create_buf(config.silent == true, true)
   vim.api.nvim_buf_call(term_buf, function()
     vim.fn.termopen(command)
   end)
-  vim.api.nvim_open_win(term_buf, true, { split = config.window.position })
+
+  -- Only open the window if `silent` is not set
+  if not config.silent then
+    vim.api.nvim_open_win(term_buf, true, { split = config.window.position })
+  end
+
+  -- Configure auto-closing when `config.window.persist` is false or if `silent` is on (i.e. the window is not open)
+  if (not config.window.persist) or config.silent then
+    vim.api.nvim_create_autocmd("TermClose", {
+      buffer = term_buf,
+      once = true,
+      callback = function()
+        vim.schedule_wrap(vim.api.nvim_buf_delete)(term_buf, {})
+      end,
+    })
+  end
 
   -- Configure keymaps
   config.keymap.sigint = type(config.keymap.sigint) == "table" and config.keymap.sigint or { config.keymap.sigint }
