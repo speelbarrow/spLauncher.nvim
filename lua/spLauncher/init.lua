@@ -54,7 +54,7 @@ function M.setup(config)
   vim.api.nvim_create_autocmd("BufNew", {
     callback = function()
       ---@type spLauncher.ActionMap
-      vim.b.spLauncherActionMap = {}
+      vim.b.spLauncherActionMap = vim.b.spLauncherActionMap or {}
     end
   })
 end
@@ -69,15 +69,27 @@ function M.spLaunch(action, bufnr, config)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
 
   -- Find the command in the appropriate action map
+  ---@type spLauncher.Handler | { handler: spLauncher.Handler, config: spLauncher.Config } | nil
   local command = vim.b[bufnr].spLauncherActionMap[action]
 
   -- Make sure there is something there
-  if command ~= nil then
-    -- Hit the 'direct spLaunch' button
-    M.direct_spLaunch(command, config)
-  else
-    -- Otherwise, send an error notification
+  if command == nil then
     vim.notify("the '" .. action .. "' action is not defined for buffer " .. bufnr, vim.log.levels.ERROR)
+  end
+
+  -- Check what is there and deal with it appropriately
+  if type(command) == "table" then
+    config = vim.tbl_deep_extend("keep", command.config or {}, config or {})
+    command = command.handler
+  end
+  if type(command) == "function" then
+    command = command()
+  end
+  if type(command) == "boolean" and command then
+    command = action
+  end
+  if type(command) == "string" then
+    M.direct_spLaunch(command, config)
   end
 end
 
@@ -117,11 +129,11 @@ function M.direct_spLaunch(command, config)
     buffer = term_buf,
     once = true,
     callback = function(args)
-      for _, key in ipairs {
-        table.unpack(config.keymap.sigint --[[ @as string[] ]]),
-        table.unpack(config.keymap.close --[[ @as string[] ]]),
-        table.unpack(config.keymap.force_close --[[ @as string[] ]]),
-      } do
+      for _, key in ipairs(vim.iter {
+        config.keymap.sigint,
+        config.keymap.close,
+        config.keymap.force_close,
+      }:flatten():totable()) do
         vim.keymap.set({ "n", "i" }, key, function()
                          vim.api.nvim_buf_delete(args.buf, {})
                        end, { buffer = args.buf })

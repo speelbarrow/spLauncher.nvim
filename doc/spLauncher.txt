@@ -59,6 +59,8 @@ behaviours:
   - `true` (will be replaced with the action name)
   - A function that returns a string (will be re-invoked every time the action
     is executed)
+  - A function that returns a boolean value (will be replaced with the action
+    name, only when the return value is `true`)
   
   If `spLauncherActionMap.base` is a non-empty string value, it will be prepended
   with a space to any string handler and then use the result as the command to

@@ -15,6 +15,7 @@
 ---| string
 ---| true
 ---| fun(): string
+---| fun(): boolean
 
 ---@alias spLauncher.Handler.Function fun(): nil # See `:help spLauncher-handlers-function`
 
