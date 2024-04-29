@@ -23,6 +23,9 @@
 ---@field debug? boolean Default: `false`
 --- When `true`, outputs the actual string that is executed by spLauncher before doing so. Uses `vim.notify` to display
 --- the string.
+---@field expand? boolean Default: `true`
+--- When `true`, processes string commands through the |expand| function. More specifically, will match any `'%'`
+--- character and all non-whitespace characters immediately after it, and will run those through |expand|.
 ---@field window? spLauncher.Config.Window See `:help spLauncher-config-window`
 ---@field keymap? spLauncher.Config.Keymap See `:help spLauncher-config-keymap`
 

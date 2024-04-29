@@ -25,6 +25,7 @@ function M.setup(config)
 
   vim.g.spLauncherConfig = vim.tbl_deep_extend("force", {
                                                  debug = false,
+                                                 expand = true,
                                                  window = {
                                                    persist = true,
                                                    position = "below",
@@ -96,8 +97,12 @@ end
 ---@param command string
 ---@param config? spLauncher.Config See `:help spLauncher-config`
 function M.direct_spLaunch(command, config)
-  -- Resolve config
+  -- Resolve variables
   config = vim.tbl_deep_extend("keep", config or {}, vim.g.spLauncherConfig)
+  if config.expand then
+    ---@param match string
+    command = command:gsub("%%%S*", vim.fn.expand)
+  end
 
   -- Run command in terminal
   local term_buf = vim.api.nvim_create_buf(false, true)
