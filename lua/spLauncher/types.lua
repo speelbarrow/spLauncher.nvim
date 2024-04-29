@@ -32,6 +32,9 @@
 ---@field keymap? spLauncher.Config.Keymap See `:help spLauncher-config-keymap`
 
 ---@class spLauncher.Config.Window See `:help spLauncher-config-window`
+---@field focus? boolean | "insert" Default: `true`
+--- When `true`, moves the focus to the terminal window upon opening. When set to `"insert"`, moves the focus to the
+--- terminal window AND enters 'Insert' mode upon opening. Set to `false` to disable both of these behaviors.
 ---@field persist? boolean Default: `true`
 --- spLauncher uses the Neovim terminal to execute command-line actions. By default, the window will stay open after the
 --- program has exited until input is attempted. To override this (i.e. close the window immediately after the program

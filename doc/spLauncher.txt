@@ -145,6 +145,12 @@ table/VimScript dictionary):
 
 - `window`                                          *spLauncher-config-window*
 
+  - `focus` (default: `true`)
+    When `true`, moves the focus to the terminal window upon opening. When
+    set to `"insert"`, moves the focus to the terminal window AND enters
+    |Insert-mode| upon opening. Set to `false` to disable both of these
+    behaviors.
+
   - `persist` (default: `true`)
     spLauncher uses the Neovim |terminal| to execute command-line actions. By 
     default, the window will stay open after the program has exited until

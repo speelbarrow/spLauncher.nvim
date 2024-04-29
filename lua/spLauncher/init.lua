@@ -28,6 +28,7 @@ function M.setup(config)
                                                  silent = false,
                                                  expand = true,
                                                  window = {
+                                                   focus = true,
                                                    persist = true,
                                                    position = "below",
                                                  },
@@ -105,7 +106,7 @@ function M.direct_spLaunch(command, config)
     command = command:gsub("%%%S*", vim.fn.expand)
   end
 
-  -- Output command if `notify` is true
+  -- Output command being run if `notify` is true
   if config.notify then
     vim.notify("spLauncher: spLaunching '" .. command .. "'", vim.log.levels.INFO)
   end
@@ -118,7 +119,12 @@ function M.direct_spLaunch(command, config)
 
   -- Only open the window if `silent` is not set
   if not config.silent then
-    vim.api.nvim_open_win(term_buf, true, { split = config.window.position })
+    vim.api.nvim_open_win(term_buf, not not config.window.focus, { split = config.window.position })
+
+    -- Enter `insert` mode on focus
+    if config.window.focus == "insert" then
+      vim.schedule_wrap(vim.api.nvim_feedkeys)("i", "n", true)
+    end
   end
 
   -- Configure auto-closing when `config.window.persist` is false or if `silent` is on (i.e. the window is not open)
