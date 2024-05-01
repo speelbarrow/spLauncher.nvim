@@ -2,6 +2,7 @@
 
 A Neovim plugin for launching tasks, I guess.
 
+
 ### Usage
 
 See [`:help spLauncher`](./doc/spLauncher.txt).
