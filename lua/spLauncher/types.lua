@@ -1,4 +1,4 @@
----@meta spLauncher
+---@meta _
 
 ---@class spLauncher.ActionMap See `:help splauncher-actions`
 ---@field base? string

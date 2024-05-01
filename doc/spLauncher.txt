@@ -18,6 +18,7 @@ Table of Contents                                             *spLauncher-toc*
 2. Handlers           |spLauncher-handlers|
 3. Configuration      |spLauncher-config|
 4. spLaunching        |spLauncher-spLaunch|
+5. Utility functions  |spLauncher-utils|
 
 ==============================================================================
 1. The Action Map                                         *spLauncher-actions*
@@ -228,5 +229,30 @@ table/VimScript dictionary):
 
 >lua
   require "spLauncher".direct_spLaunch(--[[ command ]], 0, ...)
+<
+==============================================================================
+5. Utility functions                                        *spLauncher-utils*
+
+Utility functions can be accessed through the `"spLauncher.util"` Lua module.
+The following functions are provided:
+
+- `workspace`: Overrides the action map for the buffer when a language server
+             attaches with a valid `root_dir`
+  - Arguments:
+    - `lsp` (`string`): The language server that should be checked for a
+                  | `root_dir`
+    - `config` (`spLauncher.Config`): The override configuration for 
+              |spLauncher-config| | 'workspace' mode to be merged in
+    - `bufnr` (`integer | nil`): The buffer whose action map should be 
+                           | modified, defaults to |nvim_get_current_buf()|
+
+  - Example: `ftplugin/lua.lua`>lua
+      vim.b.spLauncherActionMap = {
+        -- ... regular config ...
+      }
+
+      require "spLauncher.util".workspace("lua_ls", {
+        -- ... special workspace config ...
+      })
 <
 vim:tw=78:ft=help:norl:et:ts=2:sw=2:fen:fdl=0:
