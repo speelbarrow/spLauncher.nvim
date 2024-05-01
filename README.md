@@ -1,4 +1,4 @@
-# [spLauncher.nvim](https://github.com/speelbarrow/spLauncher)
+# [spLauncher.nvim](https://github.com/speelbarrow/spLauncher.nvim)
 
 A Neovim plugin for launching tasks, I guess.
 
