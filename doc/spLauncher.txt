@@ -144,6 +144,9 @@ table/VimScript dictionary):
   specifically, will match any `'%'` character and all non-whitespace
   characters immediately after it, and will run those through |expand|.
 
+- hide (default: `false`)
+  When `true`, terminal buffers will marked as |hidden|. 
+
 - `window`                                          *spLauncher-config-window*
 
   - `focus` (default: `true`)

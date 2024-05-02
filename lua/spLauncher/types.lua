@@ -26,8 +26,10 @@
 ---@field silent? boolean Default: `false`
 --- When `true`, executes commands in the background without displaying a terminal window.
 ---@field expand? boolean Default: `true`
---- When `true`, processes string commands through the |expand| function. More specifically, will match any `'%'`
---- character and all non-whitespace characters immediately after it, and will run those through |expand|.
+--- When `true`, processes string commands through the `expand` function. More specifically, will match any `'%'`
+--- character and all non-whitespace characters immediately after it, and will run those through `expand`.
+---@field hide? boolean Default: `false`
+--- When `true`, terminal buffers will marked as `hidden` (see `:help hidden`).
 ---@field window? spLauncher.Config.Window See `:help spLauncher-config-window`
 ---@field keymap? spLauncher.Config.Keymap See `:help spLauncher-config-keymap`
 

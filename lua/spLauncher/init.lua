@@ -27,6 +27,7 @@ function M.setup(config)
                                                  notify = false,
                                                  silent = false,
                                                  expand = true,
+                                                 hide = false,
                                                  window = {
                                                    focus = true,
                                                    persist = true,
@@ -112,7 +113,7 @@ function M.direct_spLaunch(command, config)
   end
 
   -- Run command in terminal, when `silent` is true the window is not opened and the buffer is listed instead
-  local term_buf = vim.api.nvim_create_buf(config.silent == true, true)
+  local term_buf = vim.api.nvim_create_buf((config.silent == true) or (config.hide ~= true), true)
   vim.api.nvim_buf_call(term_buf, function()
     vim.fn.termopen(command)
   end)
