@@ -1,5 +1,9 @@
 # Changelog
 
+### [0.2.1](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.2.1)
+- Implement auto-scrolling and create an associated configuration parameter ([87b878a](
+https://github.com/speelbarrow/spLauncher.nvim/commit/87b878af8232934aa59fb5ce6afde3a08123e2b9))
+
 ### [0.2.0](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.2.0)
 - Add `hide` configuration parameter ([9d21203](
 https://github.com/speelbarrow/spLauncher.nvim/commit/9d21203f95d9a1065faa18d607a5ca5643ea7a05))
