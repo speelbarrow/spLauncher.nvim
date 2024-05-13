@@ -32,6 +32,7 @@ function M.setup(config)
                                                    focus = true,
                                                    persist = true,
                                                    position = "below",
+                                                   scroll = true,
                                                  },
                                                  keymap = (config ~= nil and config.keymap ~= nil and
                                                    config.keymap.merge == false) and nil or {
@@ -173,6 +174,11 @@ function M.direct_spLaunch(command, config)
       end
     end
   })
+
+  -- Move cursor to the bottom of the terminal window to automatically scroll the output (unless `scroll` is false)
+  if config.window.scroll then
+    vim.schedule_wrap(vim.api.nvim_buf_call)(term_buf, function() vim.cmd "normal! G" end)
+  end
 end
 
 return M

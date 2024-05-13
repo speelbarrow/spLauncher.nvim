@@ -45,6 +45,9 @@
 --- Defines which area of the screen should hold the new window when spLauncher opens a terminal. `"above"` and
 --- `"below"` will result in horizontal splits, and `"left"` and `"right"` result in vertical splits. See
 --- `nvim_open_win` for more information.
+---@field scroll boolean? Default: `true`
+--- When `true`, the terminal window will scroll to the bottom when it is opened (and thus will stay "pinned" to the
+--- bottom of the terminal output).
 
 ---@class spLauncher.Config.Keymap See `:help spLauncher-config-keymap`
 ---@field merge boolean Default: `true`
