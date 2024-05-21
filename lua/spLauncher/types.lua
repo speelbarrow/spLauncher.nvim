@@ -40,7 +40,7 @@
 ---@field persist? boolean Default: `true`
 --- spLauncher uses the Neovim terminal to execute command-line actions. By default, the window will stay open after the
 --- program has exited until input is attempted. To override this (i.e. close the window immediately after the program
---- exits), set `persist` to `false`.
+--- exits), set `persist` to `false`. Note this this will close ALL WINDOWS where the terminal buffer is open.
 ---@field position? "below" | "above" | "left" | "right" Default: `"below"`
 --- Defines which area of the screen should hold the new window when spLauncher opens a terminal. `"above"` and
 --- `"below"` will result in horizontal splits, and `"left"` and `"right"` result in vertical splits. See
