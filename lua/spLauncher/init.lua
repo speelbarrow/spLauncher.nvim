@@ -134,9 +134,12 @@ function M.direct_spLaunch(command, config)
     vim.api.nvim_create_autocmd("TermClose", {
       buffer = term_buf,
       once = true,
-      callback = function()
-        vim.schedule_wrap(vim.api.nvim_buf_delete)(term_buf, {})
-      end,
+      callback = vim.schedule_wrap(function()
+        for _, win in ipairs(vim.fn.win_findbuf(term_buf)) do
+          vim.api.nvim_win_close(win, false)
+        end
+        vim.api.nvim_buf_delete(term_buf, {})
+      end),
     })
   end
 
