@@ -1,5 +1,9 @@
 # Changelog
 
+### [0.3.0](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.3.0)
+- Only call `nvim_win_close` when `window.persist = "force"`, otherwise just delete the buffer as done before v0.2.2
+([c9c87b7](https://github.com/speelbarrow/spLauncher.nvim/commit/c9c87b7cdfe51a1351400413769c611ed701a485))
+
 ### [0.2.2](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.2.2)
 - Add call to `nvim_win_close` when `window.persist` is off ([e712684](
 https://github.com/speelbarrow/spLauncher.nvim/commit/e7126848219d2e49d0d3f8031203f0322e25145f))
@@ -14,7 +18,6 @@ https://github.com/speelbarrow/spLauncher.nvim/commit/9d21203f95d9a1065faa18d607
 - Fix project URL in README.md ([08952bd](
 https://github.com/speelbarrow/spLauncher.nvim/commit/08952bd39ae91f3df444a3d8f1f121ebacfa35ea)) 
 - Minor documentation updates
-
 
 ### [0.1.0](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.1.0)
 - Initial release
