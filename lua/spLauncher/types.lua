@@ -37,10 +37,11 @@
 ---@field focus? boolean | "insert" Default: `true`
 --- When `true`, moves the focus to the terminal window upon opening. When set to `"insert"`, moves the focus to the
 --- terminal window AND enters 'Insert' mode upon opening. Set to `false` to disable both of these behaviors.
----@field persist? boolean Default: `true`
+---@field persist? boolean | "force" Default: `true`
 --- spLauncher uses the Neovim terminal to execute command-line actions. By default, the window will stay open after the
---- program has exited until input is attempted. To override this (i.e. close the window immediately after the program
---- exits), set `persist` to `false`. Note this this will close ALL WINDOWS where the terminal buffer is open.
+--- program has exited until input is attempted. There are two available override options: set this field to `false` and
+--- the *buffer* will close when the program exits, or set the `window.persist` field to `"force"` and ALL windows
+--- displaying the buffer will close when the program exits.
 ---@field position? "below" | "above" | "left" | "right" Default: `"below"`
 --- Defines which area of the screen should hold the new window when spLauncher opens a terminal. `"above"` and
 --- `"below"` will result in horizontal splits, and `"left"` and `"right"` result in vertical splits. See
