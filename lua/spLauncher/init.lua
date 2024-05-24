@@ -129,8 +129,8 @@ function M.direct_spLaunch(command, config)
     end
   end
 
-  -- Configure auto-closing when `config.window.persist` is false or if `silent` is on (i.e. the window is not open)
-  if (not config.window.persist) or config.silent then
+  if config.window.persist == "force" then
+    -- Configure auto-closing when `config.window.persist` is "force" (closes windows instead of buffers)
     vim.api.nvim_create_autocmd("TermClose", {
       buffer = term_buf,
       once = true,
@@ -140,6 +140,15 @@ function M.direct_spLaunch(command, config)
         end
         vim.api.nvim_buf_delete(term_buf, {})
       end),
+    })
+  elseif not config.window.persist or config.silent then
+    -- Configure auto-closing when `config.window.persist` is false or if `silent` is on (i.e. the window is not open)
+    vim.api.nvim_create_autocmd("TermClose", {
+      buffer = term_buf,
+      once = true,
+      callback = function()
+        vim.schedule_wrap(vim.api.nvim_buf_delete)(term_buf, {})
+      end,
     })
   end
 
