@@ -1,5 +1,11 @@
 # Changelog
 
+### [0.3.1](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.3.1)
+- Update default action keybindings ([ccd6f5c](
+https://github.com/speelbarrow/spLauncher.nvim/commit/ccd6f5c1b692c68802ae7a88bb53fa76e52b3c49))
+- Implment overriding configuration with function as input ([20c3ed0](
+https://github.com/speelbarrow/spLauncher.nvim/commit/20c3ed0bd2a21cc028d1cae767eca33a38e9f242)) 
+
 ### [0.3.0](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.3.0)
 - Only call `nvim_win_close` when `window.persist = "force"`, otherwise just delete the buffer as done before v0.2.2
 ([c9c87b7](https://github.com/speelbarrow/spLauncher.nvim/commit/c9c87b7cdfe51a1351400413769c611ed701a485))
