@@ -251,8 +251,11 @@ The following functions are provided:
   - Arguments:
     - `lsp` (`string`): The language server that should be checked for a
                   | `root_dir`
-    - `config` (`spLauncher.Config`): The override configuration for 
-              |spLauncher-config| | 'workspace' mode to be merged in
+    - `config` (`spLauncher.Config | fun(string): spLauncher.Config`): 
+                    The override configuration for |spLauncher-config| / 
+                    'workspace' mode to be merged in. If this is a function,
+                    the string argument will be the `root_dir` of the resolved
+                    |vim.lsp.Client|.
     - `bufnr` (`integer | nil`): The buffer whose action map should be 
                            | modified, defaults to |nvim_get_current_buf()|
 
