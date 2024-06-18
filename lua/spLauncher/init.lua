@@ -38,11 +38,12 @@ function M.setup(config)
                                                    config.keymap.merge == false) and nil or {
                                                    merge = true,
                                                    actions = {
-                                                     run = "<M-s>r",
-                                                     debug = "<M-s>d",
-                                                     test = "<M-s>t",
-                                                     build = "<M-s>b",
-                                                     clean = "<M-s>c",
+                                                     run = "<A-s>r",
+                                                     debug = "<A-s>d",
+                                                     test = "<A-s>t",
+                                                     build = "<A-s>b",
+                                                     clean = "<A-s>c",
+                                                     install = "<A-s>i",
                                                    },
                                                    sigint = "<C-c>",
                                                    close = { "<Esc>", "q" },
