@@ -1,5 +1,11 @@
 # Changelog
 
+### [0.3.2](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.3.2)
+- Fix issue where [`util.workspace`](
+https://github.com/speelbarrow/spLauncher.nvim/blob/b4911faeada96b0437ee406dc269035bf56d4759/lua/spLauncher/util.lua#L7) 
+would try to [`vim.tbl_deep_extend`](https://neovim.io/doc/user/lua.html#vim.tbl_deep_extend()) a nil value ([b4911fa](
+https://github.com/speelbarrow/spLauncher.nvim/commit/b4911faeada96b0437ee406dc269035bf56d4759))
+
 ### [0.3.1](https://github.com/speelbarrow/spLauncher.nvim/tree/v0.3.1)
 - Update default action keybindings ([ccd6f5c](
 https://github.com/speelbarrow/spLauncher.nvim/commit/ccd6f5c1b692c68802ae7a88bb53fa76e52b3c49))

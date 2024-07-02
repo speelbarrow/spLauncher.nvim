@@ -11,7 +11,7 @@ function M.workspace(lsp, config, bufnr)
       local client = vim.lsp.get_client_by_id(args.data.client_id)
 
       if client and client.name == lsp and client.config.root_dir ~= nil and client.config.root_dir ~= "" then
-        vim.b[args.buf].spLauncherActionMap = vim.tbl_deep_extend("force", vim.b[args.buf].spLauncherActionMap,
+        vim.b[args.buf].spLauncherActionMap = vim.tbl_deep_extend("force", vim.b[args.buf].spLauncherActionMap or {},
                                                                   type(config) == "function" and
                                                                   config(client.config.root_dir) or config)
       end
